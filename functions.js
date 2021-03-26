@@ -276,15 +276,15 @@ function  getRunRate(data){
 
 function  getCommentary(data){
   console.log('getCommentary');
-  var regexRateLimit  = /<p class='commtext'>([^<]*<b>[^<]*<\/b[^<]*)<\/p>/g;
-  var regexSrc = /<p class='commtext'>([^<]*<b>[^<]*<\/b[^<]*)<\/p>/g;
+  var regexRateLimit  = /<p class='commtext'>([^<]*)<\/p>/g;
+  var regexSrc = /<p class='commtext'>([^<]*)<\/p>/g;
   var matches = [...data.matchAll(regexRateLimit)];
   var i;
   var string ="";
   if(matches[0] != undefined){
     for(i=0;i<6;i++){
       if(matches[i] != undefined){
-        string+= matches[i][1].replace("<b>","**").replace("</b>","**")+"\n";
+        string+= matches[i][1]+"\n";
       }
     }
     return string;
