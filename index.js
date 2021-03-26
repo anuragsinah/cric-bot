@@ -148,7 +148,7 @@ client.on('message', async message =>{
                     .addField( runRate  , partnership )
                     .addField( bowler  , bowlerFigures )
                     .addField( lastWicket  , recentBalls )
-                    .setFooter('Powred by CricBuzz ', 'https://thereisabotforthat-storage.s3.amazonaws.com/uploads/cricbuzzbot.png');
+                    .setFooter('Powered by CricBuzz ', 'https://thereisabotforthat-storage.s3.amazonaws.com/uploads/cricbuzzbot.png');
         return message.channel.send(exampleEmbed);
       } catch (e) {
       console.log(e);
@@ -177,7 +177,7 @@ client.on('message', async message =>{
                     .setTitle(title)
                     .setDescription(liveScore['commentary'])
                     .setThumbnail('https://cdn.iconscout.com/icon/free/png-512/cricket-logo-1845485-1564757.png')
-                    .setFooter('Powred by CricBuzz ', 'https://thereisabotforthat-storage.s3.amazonaws.com/uploads/cricbuzzbot.png');
+                    .setFooter('Powered by CricBuzz ', 'https://thereisabotforthat-storage.s3.amazonaws.com/uploads/cricbuzzbot.png');
         return message.channel.send(exampleEmbed);
       }
     }catch(e){
