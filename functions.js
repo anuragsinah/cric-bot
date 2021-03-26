@@ -276,28 +276,24 @@ function  getRunRate(data){
 
 function  getCommentary(data){
   console.log('getCommentary');
-  var regexRateLimit  = /<p class='commtext'>([^<]*[<b>]*[^<]*[<\/b]*[^<]*)<\/p>/g;
-  var regexSrc = /<p class='commtext'>([^<]*[<b>]*[^<]*[<\/b]*[^<]*)<\/p>/g;
+  var regexRateLimit  = /<p class='commtext'>([^<]*)<\/p>/g;
+  var regexSrc = /<p class='commtext'>([^<]*)<\/p>/g;
   var matches = [...data.matchAll(regexRateLimit)];
   var i;
   var string ="";
   if(matches[0] != undefined){
-    i = 0;
-    while(i<6){
-      if(!(matches[i][1].includes("</span>"))){
-          string+= matches[i][1].replace("<b>","**").replace("</b>","**")+"\n";
-          i++;
+    for(i=0;i<6;i++){
+      if(matches[i] != undefined){
+        string+= matches[i][1]+"\n";
       }
     }
     return string;
   }else {
      matches = [...data.matchAll(regexSrc)];
      if(matches[0] != undefined){
-       i = 0;
-       while(i<6){
-         if(!(matches[i][1].includes("</span>"))){
-             string+= matches[i][1].replace("<b>","**").replace("</b>","**")+"\n";
-             i++;
+       for(i=0;i<6;i++){
+         if(matches[i] != undefined){
+           string+= matches[i][1];
          }
        }
        return string;
