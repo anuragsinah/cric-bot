@@ -3,6 +3,7 @@ const unirest = require('unirest');
 const fs = require('fs');
 const functions = require('./functions');
 const Discord = require('discord.js');
+const admin = require('firebase-admin');
 
 const client = new Discord.Client();
 
@@ -12,8 +13,54 @@ var mURL="";
 
 client.login(discordBotToken);
 
+
+var serviceAccount = {
+    "type": "service_account",
+    "project_id": process.env.project_id,
+    "private_key_id": process.env.private_key_id,
+    "private_key": process.env.private_key.replace(/\\n/g, '\n'),
+    "client_email": process.env.client_email,
+    "client_id": process.env.client_id,
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": process.env.client_x509_cert_url
+};
+
+var userPermissionApp = admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
+
+let db = userPermissionApp.firestore();
+
+
+async function getCollection() {
+    console.log('getCollection');
+    db.collection('cricBot').onSnapshot(function(snapshot){
+      snapshot.forEach(doc => {
+          if (doc.id == 'CricbuzzURL') {
+              console.log(doc.id, "=>", doc.data());
+							mURL = doc.data()['url']
+          }
+      });
+    });
+}
+
+async function updateDataToFirebase() {
+    try {
+        console.log("updateDataToFirebase");
+        var obj = {}
+        obj["url"] = mURL;
+        await db.collection('cricBot').doc('CricbuzzURL').set(obj)
+        console.log("updateDataToFirebase done");
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 client.on('ready',()=>{
 	console.log('This bot is online');
+	getCollection();
 })
 
 
@@ -46,6 +93,7 @@ client.on('message', async message =>{
                             .catch(e=> console.log(e));
       }else {
         mURL = args[1];
+				updateDataToFirebase()
         return  message.channel.send("Done. Will update you for - \n`"+ liveScore['title']+"`");
       }
     }catch(e){
@@ -67,6 +115,7 @@ client.on('message', async message =>{
         liveScore = await getLiveUpdate(mURL);
         if(isEmptyObject(liveScore)){
           mURL = "";
+					updateDataToFirebase();
           return  message.channel.send("There is problem with exisitng URL. Please set the CricBuzz live match score url by using `c.set {URL}` command");
         }
         var title = (liveScore['title'] === undefined) ? '\u200B' : liveScore['title']
