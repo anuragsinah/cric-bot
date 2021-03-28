@@ -172,10 +172,11 @@ client.on('message', async message =>{
         return  message.channel.send("Sorry commentary is not available at the moment");
       }else {
         var title = (liveScore['title'] === undefined) ? '\u200B' : liveScore['title']
+        var commentary = liveScore['commentary'].substring(0,2048);
         const exampleEmbed = new Discord.MessageEmbed()
                     .setColor('#0099ff')
                     .setTitle(title)
-                    .setDescription(liveScore['commentary'])
+                    .setDescription(commentary)
                     .setThumbnail('https://cdn.iconscout.com/icon/free/png-512/cricket-logo-1845485-1564757.png')
                     .setFooter('Powered by CricBuzz ', 'https://thereisabotforthat-storage.s3.amazonaws.com/uploads/cricbuzzbot.png');
         return message.channel.send(exampleEmbed);

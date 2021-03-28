@@ -229,7 +229,10 @@ function  getRecentBalls(data){
   }else {
      matches = [...data.matchAll(regexSrc)];
      if(matches[2] != undefined){
-       return matches[2][1];
+       if( matches[2][1].substring(0,1) =='.'){
+         return matches[2][1];
+       }
+        return matches[1][1];
      }else {
         return null;
      }
@@ -242,10 +245,20 @@ function  getLastWicket(data){
   var regexSrc = /<span style='color:#333'>([^<]*)<\/span>/g;
   var matches = [...data.matchAll(regexRateLimit)];
   if(matches[1] != undefined){
+    console.log("hi "+matches[1][1]);
+    if(matches[1] != undefined){
+      if( matches[1][1].substring(0,1) =='.'){
+        return null;
+      }
+    }
     return matches[1][1];
   }else {
      matches = [...data.matchAll(regexSrc)];
+     console.log("hi "+matches[1][1]);
      if(matches[1] != undefined){
+       if( matches[1][1].substring(0,1) =='.'){
+         return null;
+       }
        return matches[1][1];
      }else {
         return null;
@@ -276,30 +289,28 @@ function  getRunRate(data){
 
 function  getCommentary(data){
   console.log('getCommentary');
-  var regexRateLimit  = /<p class='commtext'>([^<]*)<\/p>/g;
-  var regexSrc = /<p class='commtext'>([^<]*)<\/p>/g;
+  var regexRateLimit  = /<p class='commtext'>([^<]*[<b>]*[^<]*[<\/b]*[^<]*)<\/p>/g;
+  var regexSrc = /<p class='commtext'>([^<]*[<b>]*[^<]*[<\/b]*[^<]*)<\/p>/g;
   var matches = [...data.matchAll(regexRateLimit)];
   var i;
   var string ="";
-  if(matches[0] != undefined){
-    for(i=0;i<6;i++){
-      if(matches[i] != undefined){
-        string+= matches[i][1]+"\n";
+  if(matches.length>0){
+    var count = 0;
+    for(i=0;i<matches.length;i++){
+      if( !matches[i][1].includes("</span>")){
+        string+= matches[i][1].replace("<b>","**").replace("</b>","**").replace("<i>","*").replace("</i>","*")+"\n";
+        count++;
       }
+      if(count > 6){
+        break;
+      }
+    }
+    if(string ==""){
+      return null;
     }
     return string;
   }else {
-     matches = [...data.matchAll(regexSrc)];
-     if(matches[0] != undefined){
-       for(i=0;i<6;i++){
-         if(matches[i] != undefined){
-           string+= matches[i][1];
-         }
-       }
-       return string;
-     }else {
         return null;
-     }
   }
 }
 
