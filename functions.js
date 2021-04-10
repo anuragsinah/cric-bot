@@ -254,8 +254,8 @@ function  getLastWicket(data){
     return matches[1][1];
   }else {
      matches = [...data.matchAll(regexSrc)];
-     console.log("hi "+matches[1][1]);
      if(matches[1] != undefined){
+       console.log("hi "+matches[1][1]);
        if( matches[1][1].substring(0,1) =='.'){
          return null;
        }
